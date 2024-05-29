@@ -2,11 +2,11 @@ pipeline {
     agent any
     
     environment {
-        JDK_VERSION = 'jdk8'
+        JDK_VERSION = 'jdk8' 
     }
     
     tools {
-        jdk "${JDK_VERSION}" 
+        jdk "${JDK_VERSION}"
         maven "maven"
     }
     
@@ -17,7 +17,7 @@ pipeline {
             }
         }
         
-        stage(' Execute tests using Maven ') {
+        stage('Execute tests using Maven') {
             steps {
                 sh 'mvn test' 
             }
@@ -28,26 +28,24 @@ pipeline {
                 sh 'mvn clean install' 
             }
         }
-        stage('Build docker image using ') {
+        
+        stage('Build docker image') {
             steps {
-                sh "docker build -t giku87/petclinic:${BUILD_NUMBER} ." 
-            }
-        }
-        stage('Publish docker image to docker hub registry using ') {
-            steps {
-                withCredentials([usernameId: '', passwordId: 'docker_HUB_key', passwordVariable: 'docker_HUB_key']) {
-                sh "docker push giku87/petclinic:${BUILD_NUMBER}"
+                script {
+                    sh "docker build -t giku87/petclinic:${BUILD_NUMBER} ."
                 }
-      }
-    }
-  }
-}
-      }  
-
-docker_HUB_key
-
             }
         }
-            
+        
+        stage('Publish docker image to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker_HUB_key', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                    script {
+                        sh "docker login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}"
+                        sh "docker push giku87/petclinic:${BUILD_NUMBER}"
+                    }
+                }
+            }
+        }
     }
 }
