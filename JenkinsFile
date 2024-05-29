@@ -3,6 +3,7 @@ pipeline {
     
     environment {
         JDK_VERSION = 'jdk8' 
+        DOCKER_HUB_PAT_CREDENTIAL_ID = 'docker_HUB_key'
     }
     
     tools {
@@ -39,7 +40,7 @@ pipeline {
         
         stage('Publish docker image to Docker Hub') {
             steps {
-                withCredentials([usernameId: '', passwordId: 'docker-hub-pat-id', passwordVariable: '']) {
+                withCredentials([usernameId: '', passwordId: "${DOCKER_HUB_PAT_CREDENTIAL_ID}", passwordVariable: '']) {
                     script {
                         sh "docker push giku87/petclinic:${BUILD_NUMBER}"
                     }
