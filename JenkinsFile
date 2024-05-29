@@ -1,1 +1,21 @@
-test
+pipeline {
+    agent any
+    
+    environment {
+        JDK_VERSION = 'jdk8'
+    }
+    
+    tools {
+        jdk "${JDK_VERSION}" 
+        maven "maven"
+    }
+    
+    stages {
+        stage('Compile Project') {
+            steps {
+                sh 'mvn clean compile' 
+            }
+        }
+        
+    }
+}
