@@ -28,5 +28,26 @@ pipeline {
                 sh 'mvn clean install' 
             }
         }
+        stage('Build docker image using ') {
+            steps {
+                sh "docker build -t giku87/petclinic:${BUILD_NUMBER} ." 
+            }
+        }
+        stage('Publish docker image to docker hub registry using ') {
+            steps {
+                withCredentials([usernameId: '', passwordId: 'docker_HUB_key', passwordVariable: 'docker_HUB_key']) {
+                sh "docker push giku87/petclinic:${BUILD_NUMBER}"
+                }
+      }
+    }
+  }
+}
+      }  
+
+docker_HUB_key
+
+            }
+        }
+            
     }
 }
