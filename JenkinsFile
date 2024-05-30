@@ -37,20 +37,22 @@ pipeline {
                 }
             }
         }
-        
 
 
- stage('Publish docker image to Docker Hub') {
+
+     stage('Publish docker image to Docker Hub') {
             steps {
-                withCredentials([string(credentialsId: "${DOCKER_HUB_PAT_CREDENTIAL_ID}", variable: 'DOCKER_HUB_TOKEN')]) {
+                withCredentials([string(credentialsId: "${docker_hub_key}", variable: 'DOCKER_HUB_TOKEN')]) {
                     script {
                         // Login to Docker Hub using the access token and push the Docker image
-                        sh "echo ${DOCKER_HUB_TOKEN} | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin"
+                        sh "docker login -u giku87 -p ${DOCKER_HUB_TOKEN}"
                         sh "docker push giku87/petclinic:${BUILD_NUMBER}"
                     }
                 }
             }
         }
+
+
 
 
     }
