@@ -42,13 +42,11 @@ pipeline {
 
      stage('Publish docker image to Docker Hub') {
             steps {
-                withCredentials([string(credentialsId: "${docker_hub_key}", variable: 'DOCKER_HUB_TOKEN')]) {
-                    script {
-                        // Login to Docker Hub using the access token and push the Docker image
-                        sh "docker login -u giku87 -p ${DOCKER_HUB_TOKEN}"
+                  withCredentials([usernamePassword(credentialsId: 'doker_hub', usernameVariable: 'giku87', passwordVariable: 'DOCKER_HUB_TOKEN')]) {
+                       sh """ echo "${DOCKER_HUB_TOKEN}" | docker login -u giku87 --password-stdin"""
                         sh "docker push giku87/petclinic:${BUILD_NUMBER}"
                     }
-                }
+                
             }
         }
 
